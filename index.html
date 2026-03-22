@@ -3,65 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHOEMOB | Luxury Store</title>
-    <link rel="stylesheet" href="style.css">
+    <title>SHOEMOB | Official Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #F9F7F2;
+            --accent: #D0E1F9;
+            --black: #121212;
+            --gray: #707070;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg); color: var(--black); overflow-x: hidden; }
+
+        /* --- LUXURY HEADER --- */
+        header {
+            background: white;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 0.5px solid rgba(0,0,0,0.05);
+        }
+
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; cursor: pointer; }
+        .icons { display: flex; gap: 20px; font-size: 20px; cursor: pointer; }
+        .cart-count { background: var(--black); color: white; font-size: 10px; padding: 2px 6px; border-radius: 50%; position: relative; top: -10px; left: -10px; }
+
+        /* --- SIDEBARS (MENU & CART) --- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            width: 320px;
+            height: 100%;
+            background: white;
+            z-index: 2000;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 50px 30px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.1);
+        }
+        #menu-s { left: -320px; }
+        #cart-s { right: -320px; }
+        .sidebar.active { transform: translateX(320px); } /* For left */
+        #cart-s.active { transform: translateX(-320px); } /* For right */
+
+        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; }
+        .side-link { display: block; padding: 15px 0; text-decoration: none; color: var(--black); font-weight: 600; border-bottom: 1px solid #f5f5f5; text-transform: uppercase; font-size: 14px; }
+
+        /* --- HERO SECTION --- */
+        .hero { background: white; padding: 100px 5% 60px; text-align: center; border-bottom: 1px solid #f0f0f0; }
+        .hero p { text-transform: uppercase; letter-spacing: 3px; font-size: 12px; color: var(--gray); margin-bottom: 10px; }
+        .hero h1 { font-size: clamp(35px, 8vw, 65px); font-weight: 800; line-height: 1; letter-spacing: -2px; margin-bottom: 30px; }
+        .btn { padding: 16px 45px; border: 1px solid var(--black); background: var(--black); color: white; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; font-size: 12px; }
+        .btn:hover { background: transparent; color: var(--black); }
+
+        /* --- PRODUCT GRID --- */
+        .grid-title { padding: 50px 5% 20px; font-size: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 5% 100px; }
+        @media (min-width: 900px) { .product-grid { grid-template-columns: repeat(4, 1fr); gap: 30px; } }
+
+        .p-card { background: white; border-radius: 0px; transition: 0.3s; cursor: pointer; }
+        .p-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #f3f3f3; margin-bottom: 15px; }
+        .p-name { font-size: 14px; font-weight: 500; margin-bottom: 5px; }
+        .p-price { font-weight: 700; font-size: 16px; }
+        .add-btn { width: 100%; margin-top: 15px; padding: 10px; background: none; border: 1px solid #ddd; font-weight: 600; cursor: pointer; font-size: 11px; }
+        .add-btn:hover { border-color: var(--black); background: #f9f9f9; }
+
+    </style>
 </head>
 <body>
 
     <header>
-        <div class="menu-trigger" onclick="openSidebar('side-menu')">☰</div>
+        <div onclick="toggleSide('menu-s')">☰</div>
         <div class="logo">SHOEMOB</div>
-        <div class="nav-icons">
-            <span onclick="alert('Search feature coming in next update!')">🔍</span>
-            <span onclick="openSidebar('cart-sidebar')">🛒 <small id="cart-count">0</small></span>
+        <div class="icons">
+            <span onclick="alert('Search Ready!')">🔍</span>
+            <span onclick="toggleSide('cart-s')">🛒<small class="cart-count" id="count">0</small></span>
         </div>
     </header>
 
-    <div id="side-menu" class="sidebar">
-        <span class="close-btn" onclick="closeSidebar('side-menu')">×</span>
-        <div class="menu-content">
-            <h2 style="letter-spacing:2px; margin-bottom:20px;">MENU</h2>
-            <a href="#">Luxury Sneakers</a>
-            <a href="#">Streetwear</a>
-            <a href="#">Mobile Accessories</a>
-            <a href="#">New Drops</a>
-        </div>
+    <div id="menu-s" class="sidebar">
+        <span class="close-btn" onclick="toggleSide('menu-s')">×</span>
+        <h3 style="margin-bottom: 30px; letter-spacing: 2px;">COLLECTIONS</h3>
+        <a href="#" class="side-link">Luxury Sneakers</a>
+        <a href="#" class="side-link">Streetwear Drops</a>
+        <a href="#" class="side-link">Premium Tech</a>
+        <a href="#" class="side-link">Sale</a>
     </div>
 
-    <div id="cart-sidebar" class="sidebar right">
-        <span class="close-btn" onclick="closeSidebar('cart-sidebar')">×</span>
-        <div class="menu-content">
-            <h2>YOUR CART</h2>
-            <hr>
-            <div id="cart-items" style="margin-top:20px; color:#777;">Your bag is empty.</div>
-            <div class="cart-total" style="margin-top:50px;">
-                <button class="btn btn-black" style="width:100%" onclick="alert('Checkout integration coming soon!')">CHECKOUT NOW</button>
-            </div>
-        </div>
+    <div id="cart-s" class="sidebar">
+        <span class="close-btn" onclick="toggleSide('cart-s')">×</span>
+        <h3 style="margin-bottom: 30px; letter-spacing: 2px;">YOUR BAG</h3>
+        <div id="cart-list" style="font-size: 13px; color: var(--gray);">Your bag is currently empty.</div>
+        <button class="btn" style="width: 100%; margin-top: 50px;">Checkout</button>
     </div>
 
     <section class="hero">
-        <p>Premium Quality. Luxury Style.</p>
-        <h1>UNLEASH LUXURY.</h1>
-        <div class="hero-btns">
-            <button class="btn btn-black">Shop Shoes</button>
-            <button class="btn btn-blue">Shop Tech</button>
-        </div>
+        <p>Est. 2026 | Curated Excellence</p>
+        <h1>UNLEASH<br>LUXURY.</h1>
+        <button class="btn" onclick="window.scrollTo(0, 800)">Explore Collection</button>
     </section>
 
-    <h2 class="section-title">FEATURED COLLECTIONS</h2>
+    <h2 class="grid-title">New Arrivals</h2>
     <div id="product-grid" class="product-grid">
         </div>
 
     <script>
-        // ✅ Sidebar Toggle Logic
-        function openSidebar(id) { document.getElementById(id).style.transform = "translateX(0)"; }
-        function closeSidebar(id) { 
-            if(id === 'side-menu') document.getElementById(id).style.transform = "translateX(-100%)";
-            else document.getElementById(id).style.transform = "translateX(100%)";
-        }
+        function toggleSide(id) { document.getElementById(id).classList.toggle('active'); }
 
-        // ✅ Live Data Fetching
         async function loadStore() {
             try {
                 const res = await fetch('https://shoemob-backend.onrender.com/api/products');
@@ -69,26 +123,22 @@
                 const grid = document.getElementById('product-grid');
                 
                 grid.innerHTML = data.map(p => `
-                    <div class="product-card">
-                        <div class="img-container">
-                            <img src="${p.images[0]}" alt="${p.name}">
-                        </div>
-                        <div class="p-details">
-                            <h3>${p.name}</h3>
-                            <p class="price">₹${p.price.toLocaleString()}</p>
-                            <button onclick="updateCart('${p.name}')" style="background:none; border:1px solid #ddd; padding:5px 10px; cursor:pointer; margin-top:5px; width:100%; font-size:12px;">ADD TO BAG</button>
-                        </div>
+                    <div class="p-card">
+                        <img src="${p.images[0]}" class="p-img">
+                        <div class="p-name">${p.name}</div>
+                        <div class="p-price">₹${p.price.toLocaleString()}</div>
+                        <button class="add-btn" onclick="addToCart('${p.name}')">ADD TO BAG</button>
                     </div>
                 `).join('');
-            } catch (err) { console.log("Database offline?", err); }
+            } catch (err) { console.log("Check Render Backend!"); }
         }
 
-        let count = 0;
-        function updateCart(name) {
-            count++;
-            document.getElementById('cart-count').innerText = count;
-            document.getElementById('cart-items').innerHTML = `<div style="color:#1a1a1a; font-weight:600;">${name} added!</div>`;
-            openSidebar('cart-sidebar');
+        let cart = [];
+        function addToCart(name) {
+            cart.push(name);
+            document.getElementById('count').innerText = cart.length;
+            document.getElementById('cart-list').innerHTML = cart.map(i => `<div style="padding:10px 0; border-bottom:1px solid #eee; font-weight:600;">${i}</div>`).join('');
+            toggleSide('cart-s');
         }
 
         loadStore();
