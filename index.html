@@ -3,99 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHOEMOB | Luxury Streetwear</title>
+    <title>SHOEMOB | Luxury Store</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <header>
-        <div class="menu-trigger" onclick="toggleMenu()">☰</div>
+        <div class="menu-trigger" onclick="openSidebar('side-menu')">☰</div>
         <div class="logo">SHOEMOB</div>
         <div class="nav-icons">
-            <span onclick="alert('Search coming soon!')">🔍</span>
-            <span class="cart-icon" onclick="toggleCart()">🛒 <small id="cart-count">0</small></span>
+            <span onclick="alert('Search feature coming in next update!')">🔍</span>
+            <span onclick="openSidebar('cart-sidebar')">🛒 <small id="cart-count">0</small></span>
         </div>
     </header>
 
     <div id="side-menu" class="sidebar">
-        <span class="close-btn" onclick="toggleMenu()">×</span>
+        <span class="close-btn" onclick="closeSidebar('side-menu')">×</span>
         <div class="menu-content">
-            <h2>CATEGORIES</h2>
+            <h2 style="letter-spacing:2px; margin-bottom:20px;">MENU</h2>
             <a href="#">Luxury Sneakers</a>
-            <a href="#">Streetwear Shoes</a>
-            <a href="#">Premium Tech</a>
-            <a href="#">New Arrivals</a>
+            <a href="#">Streetwear</a>
+            <a href="#">Mobile Accessories</a>
+            <a href="#">New Drops</a>
         </div>
     </div>
 
     <div id="cart-sidebar" class="sidebar right">
-        <span class="close-btn" onclick="toggleCart()">×</span>
+        <span class="close-btn" onclick="closeSidebar('cart-sidebar')">×</span>
         <div class="menu-content">
-            <h2>YOUR BAG</h2>
-            <div id="cart-items">Your bag is empty.</div>
-            <div class="cart-footer">
-                <button class="checkout-btn">PROCEED TO CHECKOUT</button>
+            <h2>YOUR CART</h2>
+            <hr>
+            <div id="cart-items" style="margin-top:20px; color:#777;">Your bag is empty.</div>
+            <div class="cart-total" style="margin-top:50px;">
+                <button class="btn btn-black" style="width:100%" onclick="alert('Checkout integration coming soon!')">CHECKOUT NOW</button>
             </div>
         </div>
     </div>
 
     <section class="hero">
-        <h1>UNLEASH LUXURY</h1>
-        <p>Curated Streetwear & Premium Tech Accessories</p>
+        <p>Premium Quality. Luxury Style.</p>
+        <h1>UNLEASH LUXURY.</h1>
         <div class="hero-btns">
-            <button class="btn btn-black">SHOP SNEAKERS</button>
-            <button class="btn btn-blue">SHOP TECH</button>
+            <button class="btn btn-black">Shop Shoes</button>
+            <button class="btn btn-blue">Shop Tech</button>
         </div>
     </section>
 
-    <section class="products-section">
-        <h2>FEATURED COLLECTIONS</h2>
-        <div id="product-grid" class="product-grid">
-            <p>Loading luxury collections...</p>
+    <h2 class="section-title">FEATURED COLLECTIONS</h2>
+    <div id="product-grid" class="product-grid">
         </div>
-    </section>
 
     <script>
-        // 🛠️ Sidebar Functions
-        function toggleMenu() { document.getElementById('side-menu').classList.toggle('active'); }
-        function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); }
+        // ✅ Sidebar Toggle Logic
+        function openSidebar(id) { document.getElementById(id).style.transform = "translateX(0)"; }
+        function closeSidebar(id) { 
+            if(id === 'side-menu') document.getElementById(id).style.transform = "translateX(-100%)";
+            else document.getElementById(id).style.transform = "translateX(100%)";
+        }
 
-        // 🔗 Fetch Real Products from your Render Backend
-        async function fetchProducts() {
+        // ✅ Live Data Fetching
+        async function loadStore() {
             try {
                 const res = await fetch('https://shoemob-backend.onrender.com/api/products');
-                const products = await res.json();
+                const data = await res.json();
                 const grid = document.getElementById('product-grid');
                 
-                if(products.length === 0) {
-                    grid.innerHTML = "<h3>No products live yet. Add from Admin!</h3>";
-                    return;
-                }
-
-                grid.innerHTML = products.map(p => `
+                grid.innerHTML = data.map(p => `
                     <div class="product-card">
-                        <img src="${p.images[0]}" alt="${p.name}">
-                        <div class="p-info">
+                        <div class="img-container">
+                            <img src="${p.images[0]}" alt="${p.name}">
+                        </div>
+                        <div class="p-details">
                             <h3>${p.name}</h3>
-                            <p class="category">${p.category}</p>
                             <p class="price">₹${p.price.toLocaleString()}</p>
-                            <button class="add-to-cart" onclick="addToCart('${p.name}')">ADD TO BAG</button>
+                            <button onclick="updateCart('${p.name}')" style="background:none; border:1px solid #ddd; padding:5px 10px; cursor:pointer; margin-top:5px; width:100%; font-size:12px;">ADD TO BAG</button>
                         </div>
                     </div>
                 `).join('');
-            } catch (err) { console.error("Error fetching products", err); }
+            } catch (err) { console.log("Database offline?", err); }
         }
 
-        let cart = [];
-        function addToCart(name) {
-            cart.push(name);
-            document.getElementById('cart-count').innerText = cart.length;
-            toggleCart();
-            document.getElementById('cart-items').innerHTML = cart.map(item => `<div class="cart-item">${item}</div>`).join('');
+        let count = 0;
+        function updateCart(name) {
+            count++;
+            document.getElementById('cart-count').innerText = count;
+            document.getElementById('cart-items').innerHTML = `<div style="color:#1a1a1a; font-weight:600;">${name} added!</div>`;
+            openSidebar('cart-sidebar');
         }
 
-        fetchProducts();
+        loadStore();
     </script>
 </body>
 </html>
