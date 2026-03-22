@@ -3,35 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHOEMOB | Luxury Sneakers & Tech</title>
+    <title>SHOEMOB | Elite Luxury Store</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="shopify-nav">
-        <div class="logo">SHOEMOB</div>
-        <ul class="nav-links">
-            <li>SNEAKERS</li>
-            <li>ACCESSORIES</li>
-        </ul>
-        <div class="cart-icon">🛒 (0)</div>
+
+    <div id="intro-screen">
+        <div class="particles"></div>
+        <div class="shimmer-logo">SHOEMOB</div>
+        <div class="loader-bar"><div class="fill"></div></div>
+        <button class="skip-btn" onclick="hideIntro()">SKIP</button>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="hamburger" onclick="toggleMenu()">☰</div>
+            <div class="logo" onclick="location.reload()">SHOEMOB</div>
+            <div class="nav-icons">
+                <span class="search-trigger" onclick="toggleSearch()">🔍</span>
+                <span class="wishlist-icon">❤️</span>
+                <span class="cart-trigger" onclick="toggleCart()">🛒 <b id="cart-count">0</b></span>
+            </div>
+        </div>
+        <div class="search-overlay" id="searchOverlay">
+            <input type="text" id="searchInput" placeholder="Search sneakers or accessories..." onkeyup="searchProducts()">
+        </div>
     </nav>
 
-    <header class="hero">
-        <div class="hero-text">
-            <h2>NEW ARRIVALS 2026</h2>
-            <h1>STEP INTO LUXURY</h1>
-            <button class="shop-btn">SHOP NOW</button>
-        </div>
-    </header>
-
-    <section id="products" class="product-section">
-        <h3 class="section-title">FEATURED COLLECTIONS</h3>
-        <div class="product-grid" id="productGrid">
+    <main id="main-content">
+        <header class="hero">
+            <div class="hero-overlay">
+                <h1>UNLEASH LUXURY</h1>
+                <p>Curated Streetwear & Premium Tech</p>
+                <div class="hero-btns">
+                    <button class="btn-main" onclick="filterCategory('Sneakers')">SHOP SHOES</button>
+                    <button class="btn-sub" onclick="filterCategory('Accessories')">SHOP TECH</button>
+                </div>
             </div>
+        </header>
+
+        <section class="products-section">
+            <h2 class="section-title">FEATURED COLLECTIONS</h2>
+            <div class="product-grid" id="productGrid">
+                <p class="loading">Fetching Elite Inventory...</p>
+            </div>
+        </section>
     </section>
+
+    <div id="checkoutModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>SECURE CHECKOUT</h2>
+            <div id="order-summary" class="summary"></div>
+            <form id="checkoutForm">
+                <input type="text" id="custName" placeholder="Full Name" required>
+                <input type="email" id="custEmail" placeholder="Email Address" required>
+                <input type="text" id="custMobile" placeholder="Mobile Number" required>
+                <textarea id="custAddress" placeholder="Full Delivery Address" rows="3" required></textarea>
+                <div class="row">
+                    <input type="text" id="custCity" placeholder="City">
+                    <input type="text" id="custState" placeholder="State">
+                    <input type="text" id="custZip" placeholder="ZIP Code">
+                </div>
+                <p class="cod-tag">💳 Cash on Delivery (COD) Selected</p>
+                <button type="button" class="place-order" onclick="submitOrder()">CONFIRM PURCHASE</button>
+            </form>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
 </html>
-
