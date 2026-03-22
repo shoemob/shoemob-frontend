@@ -3,75 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHOEMOB | Elite Luxury Store</title>
+    <title>SHOEMOB | Luxury Streetwear</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div id="intro-screen">
-        <div class="particles"></div>
-        <div class="shimmer-logo">SHOEMOB</div>
-        <div class="loader-bar"><div class="fill"></div></div>
-        <button class="skip-btn" onclick="hideIntro()">SKIP</button>
+    <header>
+        <div class="menu-trigger" onclick="toggleMenu()">☰</div>
+        <div class="logo">SHOEMOB</div>
+        <div class="nav-icons">
+            <span onclick="alert('Search coming soon!')">🔍</span>
+            <span class="cart-icon" onclick="toggleCart()">🛒 <small id="cart-count">0</small></span>
+        </div>
+    </header>
+
+    <div id="side-menu" class="sidebar">
+        <span class="close-btn" onclick="toggleMenu()">×</span>
+        <div class="menu-content">
+            <h2>CATEGORIES</h2>
+            <a href="#">Luxury Sneakers</a>
+            <a href="#">Streetwear Shoes</a>
+            <a href="#">Premium Tech</a>
+            <a href="#">New Arrivals</a>
+        </div>
     </div>
 
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="hamburger" onclick="toggleMenu()">☰</div>
-            <div class="logo" onclick="location.reload()">SHOEMOB</div>
-            <div class="nav-icons">
-                <span class="search-trigger" onclick="toggleSearch()">🔍</span>
-                <span class="wishlist-icon">❤️</span>
-                <span class="cart-trigger" onclick="toggleCart()">🛒 <b id="cart-count">0</b></span>
+    <div id="cart-sidebar" class="sidebar right">
+        <span class="close-btn" onclick="toggleCart()">×</span>
+        <div class="menu-content">
+            <h2>YOUR BAG</h2>
+            <div id="cart-items">Your bag is empty.</div>
+            <div class="cart-footer">
+                <button class="checkout-btn">PROCEED TO CHECKOUT</button>
             </div>
         </div>
-        <div class="search-overlay" id="searchOverlay">
-            <input type="text" id="searchInput" placeholder="Search sneakers or accessories..." onkeyup="searchProducts()">
+    </div>
+
+    <section class="hero">
+        <h1>UNLEASH LUXURY</h1>
+        <p>Curated Streetwear & Premium Tech Accessories</p>
+        <div class="hero-btns">
+            <button class="btn btn-black">SHOP SNEAKERS</button>
+            <button class="btn btn-blue">SHOP TECH</button>
         </div>
-    </nav>
-
-    <main id="main-content">
-        <header class="hero">
-            <div class="hero-overlay">
-                <h1>UNLEASH LUXURY</h1>
-                <p>Curated Streetwear & Premium Tech</p>
-                <div class="hero-btns">
-                    <button class="btn-main" onclick="filterCategory('Sneakers')">SHOP SHOES</button>
-                    <button class="btn-sub" onclick="filterCategory('Accessories')">SHOP TECH</button>
-                </div>
-            </div>
-        </header>
-
-        <section class="products-section">
-            <h2 class="section-title">FEATURED COLLECTIONS</h2>
-            <div class="product-grid" id="productGrid">
-                <p class="loading">Fetching Elite Inventory...</p>
-            </div>
-        </section>
     </section>
 
-    <div id="checkoutModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2>SECURE CHECKOUT</h2>
-            <div id="order-summary" class="summary"></div>
-            <form id="checkoutForm">
-                <input type="text" id="custName" placeholder="Full Name" required>
-                <input type="email" id="custEmail" placeholder="Email Address" required>
-                <input type="text" id="custMobile" placeholder="Mobile Number" required>
-                <textarea id="custAddress" placeholder="Full Delivery Address" rows="3" required></textarea>
-                <div class="row">
-                    <input type="text" id="custCity" placeholder="City">
-                    <input type="text" id="custState" placeholder="State">
-                    <input type="text" id="custZip" placeholder="ZIP Code">
-                </div>
-                <p class="cod-tag">💳 Cash on Delivery (COD) Selected</p>
-                <button type="button" class="place-order" onclick="submitOrder()">CONFIRM PURCHASE</button>
-            </form>
+    <section class="products-section">
+        <h2>FEATURED COLLECTIONS</h2>
+        <div id="product-grid" class="product-grid">
+            <p>Loading luxury collections...</p>
         </div>
-    </div>
+    </section>
 
-    <script src="script.js"></script>
+    <script>
+        // 🛠️ Sidebar Functions
+        function toggleMenu() { document.getElementById('side-menu').classList.toggle('active'); }
+        function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); }
+
+        // 🔗 Fetch Real Products from your Render Backend
+        async function fetchProducts() {
+            try {
+                const res = await fetch('https://shoemob-backend.onrender.com/api/products');
+                const products = await res.json();
+                const grid = document.getElementById('product-grid');
+                
+                if(products.length === 0) {
+                    grid.innerHTML = "<h3>No products live yet. Add from Admin!</h3>";
+                    return;
+                }
+
+                grid.innerHTML = products.map(p => `
+                    <div class="product-card">
+                        <img src="${p.images[0]}" alt="${p.name}">
+                        <div class="p-info">
+                            <h3>${p.name}</h3>
+                            <p class="category">${p.category}</p>
+                            <p class="price">₹${p.price.toLocaleString()}</p>
+                            <button class="add-to-cart" onclick="addToCart('${p.name}')">ADD TO BAG</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) { console.error("Error fetching products", err); }
+        }
+
+        let cart = [];
+        function addToCart(name) {
+            cart.push(name);
+            document.getElementById('cart-count').innerText = cart.length;
+            toggleCart();
+            document.getElementById('cart-items').innerHTML = cart.map(item => `<div class="cart-item">${item}</div>`).join('');
+        }
+
+        fetchProducts();
+    </script>
 </body>
 </html>
